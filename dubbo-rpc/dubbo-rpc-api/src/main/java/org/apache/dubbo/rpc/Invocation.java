@@ -21,6 +21,8 @@ import java.util.Map;
 /**
  * Invocation. (API, Prototype, NonThreadSafe)
  *
+ * Invocation 是会话域，它持有调用过程中的变量，比如方法名，参数等。
+ *
  * @serial Don't change the class name and package name.
  * @see org.apache.dubbo.rpc.Invoker#invoke(Invocation)
  * @see org.apache.dubbo.rpc.RpcInvocation

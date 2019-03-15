@@ -23,6 +23,8 @@ import java.util.Map;
 /**
  * RPC invoke result. (API, Prototype, NonThreadSafe)
  *
+ * Result 是会话域，它持有调用过程中返回值，异常等。
+ *
  * @serial Don't change the class name and package name.
  * @see org.apache.dubbo.rpc.Invoker#invoke(Invocation)
  * @see org.apache.dubbo.rpc.RpcResult

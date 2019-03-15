@@ -23,6 +23,8 @@ import org.apache.dubbo.common.extension.SPI;
  * functions in dubbo are implemented base on the same mechanism. Since every time when remote method is
  * invoked, the filter extensions will be executed too, the corresponding penalty should be considered before
  * more filters are added.
+ *
+ * 拦截服务提供者和消费者的调用的扩展，此外，dubbo中的大多数功能都是基于相同的机制实现的。 由于每次调用远程方法时，也会执行过滤器扩展，在添加更多过滤器之前应考虑相应的惩罚。
  * <pre>
  *  They way filter work from sequence point of view is
  *    <b>
