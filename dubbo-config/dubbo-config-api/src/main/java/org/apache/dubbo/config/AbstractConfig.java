@@ -147,6 +147,13 @@ public abstract class AbstractConfig implements Serializable {
         appendParameters(parameters, config, null);
     }
 
+    /**
+     * 将配置对象的属性，添加到参数集合
+     *
+     * @param parameters
+     * @param config
+     * @param prefix
+     */
     @SuppressWarnings("unchecked")
     protected static void appendParameters(Map<String, String> parameters, Object config, String prefix) {
         if (config == null) {
@@ -156,28 +163,34 @@ public abstract class AbstractConfig implements Serializable {
         for (Method method : methods) {
             try {
                 String name = method.getName();
-                if (ClassHelper.isGetter(method)) {
+                if (ClassHelper.isGetter(method)) { // 方法为获取基本类型，public 的 getting 方法。
                     Parameter parameter = method.getAnnotation(Parameter.class);
                     if (method.getReturnType() == Object.class || parameter != null && parameter.excluded()) {
                         continue;
                     }
+                    // 获得属性名
                     String key;
                     if (parameter != null && parameter.key().length() > 0) {
                         key = parameter.key();
                     } else {
                         key = calculatePropertyFromGetter(name);
                     }
+                    // 获得属性值
                     Object value = method.invoke(config);
                     String str = String.valueOf(value).trim();
                     if (value != null && str.length() > 0) {
+                        // 转义
                         if (parameter != null && parameter.escaped()) {
                             str = URL.encode(str);
                         }
+                        // 拼接，详细说明参见 `Parameter#append()` 方法的说明。
                         if (parameter != null && parameter.append()) {
+                            // default. 里获取，适用于 ServiceConfig =》ProviderConfig 、ReferenceConfig =》ConsumerConfig 。
                             String pre = parameters.get(Constants.DEFAULT_KEY + "." + key);
                             if (pre != null && pre.length() > 0) {
                                 str = pre + "," + str;
                             }
+                            // 通过 `parameters` 属性配置，例如 `AbstractMethodConfig.parameters` 。
                             pre = parameters.get(key);
                             if (pre != null && pre.length() > 0) {
                                 str = pre + "," + str;
@@ -186,6 +199,7 @@ public abstract class AbstractConfig implements Serializable {
                         if (prefix != null && prefix.length() > 0) {
                             key = prefix + "." + key;
                         }
+                        // 添加配置项到 parameters
                         parameters.put(key, str);
                     } else if (parameter != null && parameter.required()) {
                         throw new IllegalStateException(config.getClass().getSimpleName() + "." + key + " == null");
@@ -208,6 +222,12 @@ public abstract class AbstractConfig implements Serializable {
         }
     }
 
+    /**
+     * 将 @Parameter(attribute = true) 配置对象的属性，添加到参数集合
+     *
+     * @param parameters
+     * @param config
+     */
     protected static void appendAttributes(Map<String, Object> parameters, Object config) {
         appendAttributes(parameters, config, null);
     }
