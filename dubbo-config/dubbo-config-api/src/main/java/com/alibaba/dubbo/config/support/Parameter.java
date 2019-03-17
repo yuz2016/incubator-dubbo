@@ -16,6 +16,8 @@
  */
 package com.alibaba.dubbo.config.support;
 
+import com.alibaba.dubbo.config.AbstractInterfaceConfig;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -30,15 +32,33 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 public @interface Parameter {
 
+    /**
+     * 键（别名）
+     */
     String key() default "";
 
+    /**
+     * 是否必填
+     */
     boolean required() default false;
 
+    /**
+     * 是否忽略
+     */
     boolean excluded() default false;
 
+    /**
+     * 是否转义
+     */
     boolean escaped() default false;
 
+    /**
+     * 是否为属性
+     *
+     * 目前用于《事件通知》http://dubbo.apache.org/zh-cn/docs/user/demos/events-notify.html
+     */
     boolean attribute() default false;
+
 
     boolean append() default false;
 
