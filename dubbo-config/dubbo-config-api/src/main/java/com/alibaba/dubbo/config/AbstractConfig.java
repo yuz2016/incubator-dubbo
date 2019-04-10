@@ -93,8 +93,10 @@ public abstract class AbstractConfig implements Serializable {
         if (config == null) {
             return;
         }
+        // 例：dubbo.service.
         String prefix = "dubbo." + getTagName(config.getClass()) + ".";
         Method[] methods = config.getClass().getMethods();
+        // 遍历config里每个方法
         for (Method method : methods) {
             try {
                 String name = method.getName();
