@@ -49,6 +49,7 @@ public abstract class AbstractMethodConfig extends AbstractConfig {
     // whether to ack async-sent
     protected Boolean sent;
 
+    //
     // the name of mock class which gets called when a service fails to execute
     protected String mock;
 
