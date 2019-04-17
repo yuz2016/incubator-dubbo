@@ -100,6 +100,8 @@ public abstract class AbstractConfig implements Serializable {
         for (Method method : methods) {
             try {
                 String name = method.getName();
+                // 方法是 public 的 setting 方法。
+                // 方法的唯一参数是基本数据类型
                 if (name.length() > 3 && name.startsWith("set") && Modifier.isPublic(method.getModifiers())
                         && method.getParameterTypes().length == 1 && isPrimitive(method.getParameterTypes()[0])) {
                     // 获得属性名，例如 `ApplicationConfig#setName(...)` 方法，对应的属性名为 name 。
@@ -135,7 +137,9 @@ public abstract class AbstractConfig implements Serializable {
                             }
                         }
                         if (getter != null) {
-                            if (getter.invoke(config) == null) {// 使用 getter 判断 XML 是否已经设置
+                            // 使用 getter 判断 XML 是否已经设置
+                            // 如果没设置，去"properties 配置"里读取
+                            if (getter.invoke(config) == null) {
                                 // 【properties 配置】优先从带有 `Config#id` 的配置中获取，例如：`dubbo.application.demo-provider.name` 。
                                 if (config.getId() != null && config.getId().length() > 0) {
                                     value = ConfigUtils.getProperty(prefix + config.getId() + "." + property);
@@ -151,7 +155,6 @@ public abstract class AbstractConfig implements Serializable {
                                         value = convertLegacyValue(legacyKey, ConfigUtils.getProperty(legacyKey));
                                     }
                                 }
-
                             }
                         }
                     }
